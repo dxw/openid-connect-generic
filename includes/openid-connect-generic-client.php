@@ -2,6 +2,10 @@
 
 class OpenID_Connect_Generic_Client {
 
+	/**
+	* Modified by dxw, 2020-03-30
+	**/
+
 	private $client_id;
 	private $client_secret;
 	private $scope;
