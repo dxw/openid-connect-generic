@@ -6,7 +6,7 @@ if (php_sapi_name() !== 'cli') {
 }
 
 if (count($argv) !== 2) {
-    echo "Usage: php cmd.php /path/to/wp-load.php\n";
+    echo "Usage: php expired-state-cleanup.php /path/to/wp-load.php\n";
     exit(1);
 }
 
