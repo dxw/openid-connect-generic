@@ -260,7 +260,7 @@ class OpenID_Connect_Generic_Client {
 		$valid  = false;
 
 		// see if the current state is still within the list of valid states
-		if ( isset( $state_timestamp ) && ($state_timestamp + $this->state_time_limit) < time() ) {
+		if ( isset( $state_timestamp ) && ($state_timestamp + $this->state_time_limit) > time() ) {
 			delete_option( 'openid-connect-generic-state-'  . $state_hash );
 			$valid = true;
 		}
