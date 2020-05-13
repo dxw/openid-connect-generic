@@ -83,7 +83,12 @@ class OpenID_Connect_Generic_Client {
 		}
 
 		// check the client request state
-		if ( ! isset( $request['state'] ) || ! $this->check_state( $request['state'] ) ){
+		if ( ! isset( $request['state'] ) ) {
+			trigger_error('SSO error: No state token provided', E_USER_WARNING);
+			return new WP_Error( 'missing-state', __( 'Missing state.' ), $request );
+		}
+
+		if ( ! $this->check_state( $request['state'] ) ){
 			return new WP_Error( 'missing-state', __( 'Missing state.' ), $request );
 		}
 
@@ -262,6 +267,14 @@ class OpenID_Connect_Generic_Client {
 	function check_state( $state_hash ) {
 		$state_timestamp = get_option( 'openid-connect-generic-state-' . $state_hash, null);
 		$valid  = false;
+
+		if ( !isset( $state_timestamp ) ) {
+			trigger_error( 'SSO error: No matching state token found for ' . $state_hash, E_USER_WARNING );
+		}
+
+		if ( isset( $state_timestamp ) && ( $state_timestamp + $this->state_time_limit ) <= time() ) {
+			trigger_error( 'SSO error: State token expired: ' . $state_hash, E_USER_WARNING );
+		}
 
 		// see if the current state is still within the list of valid states
 		if ( isset( $state_timestamp ) && ($state_timestamp + $this->state_time_limit) > time() ) {
